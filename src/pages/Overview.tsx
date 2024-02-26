@@ -36,7 +36,7 @@ const columns: GridColDef[] = [
             </Link>
         )
     },
-    {field: 'slug', headerName: 'Slug', width: 150},
+    {field: 'slug', headerName: 'Slug', width: 200},
 
     {
         field: 'transparent', headerName: 'Transparent', width: 120,
@@ -72,7 +72,7 @@ const Overview = () => {
                                 sx={{
                                     fontSize: 50,
                                 }}>
-                        Hack Club Styled
+                        ClearSight
                     </Typography>
 
                     <Typography variant={'subtitle1'}
