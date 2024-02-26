@@ -2,7 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import useSWR from "swr";
 import {fetcher, hcbApi} from "../config/api.ts";
 import {OrganizationType} from "../types/organizationType.ts";
-import {Box, Card, Chip, Grid, IconButton, Stack, Typography} from "@mui/material";
+import {Avatar, Box, Card, Chip, Grid, IconButton, Stack, Typography} from "@mui/material";
 import {BarChart, LineChart} from "@mui/x-charts";
 import {DonationTransaction} from "../types/donationType.ts";
 import {useEffect, useState} from "react";
@@ -110,10 +110,16 @@ const Organization = () => {
                         <ArrowCircleLeftOutlined/>
                     </IconButton>
 
-                    {data?.logo && (
+                    {data?.logo ? (
                         <img src={data?.logo}
                              width={30}
                              height={30}/>
+                    ) : (
+                        <Avatar sx={{
+                            bgcolor: 'primary.main'
+                        }}>
+                            {data?.name?.charAt(0)}
+                        </Avatar>
                     )}
 
                     <Typography variant={"h2"}>
@@ -144,7 +150,7 @@ const Organization = () => {
                           spacing={2}>
                         <Grid item
                               xs={6}
-                              lg={3}>
+                              lg={6}>
                             <Card sx={{
                                 padding: 2,
                                 boxShadow: 'none',
@@ -175,7 +181,7 @@ const Organization = () => {
 
                         <Grid item
                               xs={6}
-                              lg={3}>
+                              lg={6}>
                             <Card sx={{
                                 padding: 2,
                                 boxShadow: 'none',
@@ -204,7 +210,7 @@ const Organization = () => {
                         </Grid>
                         <Grid item
                               xs={6}
-                              lg={3}>
+                              lg={6}>
                             <Card sx={{
                                 padding: 2,
                                 boxShadow: 'none',
@@ -233,7 +239,7 @@ const Organization = () => {
                         </Grid>
                         <Grid item
                               xs={6}
-                              lg={3}>
+                              lg={6}>
                             <Card sx={{
                                 padding: 2,
                                 boxShadow: 'none',
