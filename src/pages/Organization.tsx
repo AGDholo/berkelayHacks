@@ -2,7 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import useSWR from "swr";
 import {fetcher, hcbApi} from "../config/api.ts";
 import {OrganizationType} from "../types/organizationType.ts";
-import {Box, Card, Chip, Grid, Icon, Stack, Typography} from "@mui/material";
+import {Box, Card, Chip, Grid, IconButton, Stack, Typography} from "@mui/material";
 import {BarChart, LineChart} from "@mui/x-charts";
 import {DonationTransaction} from "../types/donationType.ts";
 import {useEffect, useState} from "react";
@@ -26,6 +26,9 @@ const Organization = () => {
     const [invoiceMonths, setInvoiceMonths] = useState<string[]>([]);
     const [invoiceAmounts, setInvoiceAmounts] = useState<number[]>([]);
 
+    const [totalMonths, setTotalMonths] = useState<string[]>([]);
+    const [totalSummary, setTotalSummary] = useState<number[]>([]);
+
     useEffect(() => {
         // 明确地声明累加器的类型
         if (donations && donations.length > 0) {
@@ -34,7 +37,7 @@ const Organization = () => {
                 if (!acc[month]) {
                     acc[month] = 0;
                 }
-                acc[month] += donation.amount_cents;
+                acc[month] += donation.amount_cents / 100;
                 return acc;
             }, {});
 
@@ -57,7 +60,7 @@ const Organization = () => {
                 if (!acc[month]) {
                     acc[month] = 0;
                 }
-                acc[month] += i.amount_cents;
+                acc[month] += i.amount_cents / 100;
                 return acc;
             }, {});
 
@@ -72,6 +75,25 @@ const Organization = () => {
 
     }, [invoice]);
 
+    useEffect(() => {
+        if (donations && invoice) {
+            const combined = [...donations, ...invoice];
+            const summary = combined.reduce<{ [key: string]: number }>((acc, curr) => {
+                const month = curr.date.substring(0, 7); // "YYYY-MM"
+                if (!acc[month]) {
+                    acc[month] = 0;
+                }
+                acc[month] += curr.amount_cents / 100;
+                return acc;
+            }, {});
+
+            const months = Object.keys(summary).sort(); // 排序月份
+            const amounts = months.map(month => summary[month]); // 根据月份获取金额
+
+            setTotalMonths(months);
+            setTotalSummary(amounts);
+        }
+    }, [donations, invoice]); // 依赖于 donations 和 invoice
 
     return (
         <div>
@@ -80,15 +102,13 @@ const Organization = () => {
                 <Stack spacing={1}
                        direction={"row"}
                        alignItems={'center'}>
-                    <Icon component={Link}
-                          sx={{
-                              alignSelf: 'center',
-                          }}
-                          to={'/'}>
-                        <ArrowCircleLeftOutlined
-
-                        />
-                    </Icon>
+                    <IconButton component={Link}
+                                sx={{
+                                    alignSelf: 'center',
+                                }}
+                                to={'/'}>
+                        <ArrowCircleLeftOutlined/>
+                    </IconButton>
 
                     {data?.logo && (
                         <img src={data?.logo}
@@ -112,7 +132,8 @@ const Organization = () => {
             </Stack>
 
 
-            <Grid container>
+            <Grid container
+                  spacing={2}>
                 <Grid item
                       xs={12}
                       md={8}>
@@ -141,9 +162,13 @@ const Organization = () => {
                                     textOverflow={"ellipsis"}
                                     variant={"h1"}
                                     sx={{
-                                        mt: 1
+                                        mt: 1,
+                                        overflow: 'hidden',       // 确保超出部分不显示
+                                        textOverflow: 'ellipsis', // 使用省略号
+                                        whiteSpace: 'nowrap',     // 不换行，确保省略号能生效
+                                        width: '100%'
                                     }}>
-                                    {formatter.format(data?.balances.balance_cents ?? 0)}
+                                    {formatter.format(data?.balances.balance_cents / 100 ?? 0)}
                                 </Typography>
                             </Card>
                         </Grid>
@@ -167,7 +192,11 @@ const Organization = () => {
                                 </Box>
                                 <Typography variant={"h1"}
                                             sx={{
-                                                mt: 1
+                                                mt: 1,
+                                                overflow: 'hidden',       // 确保超出部分不显示
+                                                textOverflow: 'ellipsis', // 使用省略号
+                                                whiteSpace: 'nowrap',     // 不换行，确保省略号能生效
+                                                width: '100%'
                                             }}>
                                     {formatter.format(data?.balances.total_raised ?? 0)}
                                 </Typography>
@@ -192,9 +221,13 @@ const Organization = () => {
                                 </Box>
                                 <Typography variant={"h1"}
                                             sx={{
-                                                mt: 1
+                                                mt: 1,
+                                                overflow: 'hidden',       // 确保超出部分不显示
+                                                textOverflow: 'ellipsis', // 使用省略号
+                                                whiteSpace: 'nowrap',     // 不换行，确保省略号能生效
+                                                width: '100%'
                                             }}>
-                                    {formatter.format(data?.balances.incoming_balance_cents ?? 0)}
+                                    {formatter.format(data?.balances.incoming_balance_cents / 100 ?? 0)}
                                 </Typography>
                             </Card>
                         </Grid>
@@ -217,7 +250,11 @@ const Organization = () => {
                                 </Box>
                                 <Typography variant={"h1"}
                                             sx={{
-                                                mt: 1
+                                                mt: 1,
+                                                overflow: 'hidden',       // 确保超出部分不显示
+                                                textOverflow: 'ellipsis', // 使用省略号
+                                                whiteSpace: 'nowrap',     // 不换行，确保省略号能生效
+                                                width: '100%'
                                             }}>
                                     {formatter.format(data?.balances.fee_balance_cents ?? 0)}
                                 </Typography>
@@ -226,32 +263,103 @@ const Organization = () => {
                     </Grid>
 
 
-                    <Box sx={{
-                        mt: 2
+                    <Card sx={{
+                        boxShadow: 'none',
+                        border: '1px solid #e0e0e0',
+                        mt: 2,
+                        bgcolor: 'rgba(0,0,0,0.01)',
+                        padding: 2,
                     }}>
+                        <Typography variant={"h2"}>
+                            Amount
+                        </Typography>
                         {
                             donationMonths && donationAmounts && donations && donations.length > 0 ? (
                                 <LineChart
+                                    sx={{
+                                        p: 1,
+                                    }}
                                     xAxis={[{
                                         scaleType: 'point',
-                                        data: donationMonths
+                                        data: totalMonths
                                     }]}
                                     series={[
                                         {
-                                            label: 'Donations',
-                                            data: donationAmounts
+                                            data: totalSummary
                                         },
                                     ]}
                                     height={300}
                                 />
                             ) : (
                                 <div>
-                                    No donations
+                                    No Amount
                                 </div>
                             )
                         }
 
-                    </Box>
+                    </Card>
+
+                    <Card sx={{
+                        boxShadow: 'none',
+                        border: '1px solid #e0e0e0',
+                        mt: 2,
+                        bgcolor: 'rgba(0,0,0,0.01)',
+
+                    }}>
+                        {donations && donations.length > 0 && (
+                            <Box maxHeight={300}
+                                 sx={{
+                                     overflowY: 'auto'
+                                 }}>
+                                <Typography variant={"h2"}
+                                            sx={{
+                                                position: 'sticky',
+                                                top: 0,
+                                                zIndex: 1,
+                                                padding: 2,
+                                                bgcolor: 'white',
+                                            }}>
+                                    Donation Users
+                                </Typography>
+
+                                {donations?.map((donation, index) => (
+                                    <Card key={index}
+                                          sx={{
+                                              bgcolor: 'rgba(0,0,0,0.01)',
+                                              padding: 1,
+                                              pl: 2,
+                                              boxShadow: 'none',
+                                              borderBottom: '1px solid #e0e0e0'
+                                          }}>
+                                        <Box sx={{
+                                            display: 'flex',
+                                        }}>
+                                            <Typography variant={"body1"}
+                                                        sx={{
+                                                            width: 200
+                                                        }}>
+                                                {donation.donor?.name}
+                                            </Typography>
+                                            <Typography variant={"body1"}
+                                                        sx={{
+                                                            ml: 2,
+                                                            width: 100
+                                                        }}>
+                                                {formatter.format(donation.amount_cents / 100)}
+                                            </Typography>
+
+                                            <Typography variant={"body1"}
+                                                        sx={{
+                                                            ml: 2
+                                                        }}>
+                                                {donation.date}
+                                            </Typography>
+                                        </Box>
+                                    </Card>
+                                ))}
+                            </Box>
+                        )}
+                    </Card>
                 </Grid>
 
                 <Grid item
@@ -260,37 +368,60 @@ const Organization = () => {
                     <Grid container>
                         <Grid item
                               xs={12}>
-                            {
-                                donationMonths && donationAmounts && donations && donations.length > 0 ? (
-                                    <BarChart
-                                        xAxis={[{scaleType: 'band', data: donationMonths}]}
-                                        series={[{data: donationAmounts, label: 'Donations'}]}
-                                        height={300}
-                                    />
-                                ) : (
-                                    <div>
-                                        No donations
-                                    </div>
-                                )
-                            }
+                            <Card sx={{
+                                padding: 2,
+                                boxShadow: 'none',
+                                border: '1px solid #e0e0e0',
+                                bgcolor: 'rgba(0,0,0,0.01)'
+                            }}>
+                                <Typography variant={"h2"}>
+                                    Donations
+                                </Typography>
+                                {
+                                    donationMonths && donationAmounts && donations && donations.length > 0 ? (
+                                        <BarChart
+                                            xAxis={[{scaleType: 'band', data: donationMonths}]}
+                                            series={[{data: donationAmounts}]}
+                                            height={300}
+                                        />
+                                    ) : (
+                                        <div>
+                                            No donations
+                                        </div>
+                                    )
+                                }
+                            </Card>
                         </Grid>
 
                         <Grid item
                               xs={12}
                         >
-                            {
-                                invoiceMonths && invoiceAmounts && invoice && invoice.length > 0 ? (
-                                    <BarChart
-                                        colors={['#ef5350']}
-                                        xAxis={[{scaleType: 'band', data: invoiceMonths}]}
-                                        series={[{data: invoiceAmounts, label: 'Invoices'}]}
-                                        height={300}
-                                    />
-                                ) : (
-                                    <div>
-                                        No invoices
-                                    </div>
-                                )}
+                            <Card
+                                sx={{
+                                    padding: 2,
+                                    boxShadow: 'none',
+                                    border: '1px solid #e0e0e0',
+                                    mt: 2,
+                                    bgcolor: 'rgba(0,0,0,0.01)'
+                                }}
+                            >
+                                <Typography variant={"h2"}>
+                                    Invoices
+                                </Typography>
+                                {
+                                    invoiceMonths && invoiceAmounts && invoice && invoice.length > 0 ? (
+                                        <BarChart
+                                            colors={['#ef5350']}
+                                            xAxis={[{scaleType: 'band', data: invoiceMonths}]}
+                                            series={[{data: invoiceAmounts}]}
+                                            height={300}
+                                        />
+                                    ) : (
+                                        <div>
+                                            No invoices
+                                        </div>
+                                    )}
+                            </Card>
                         </Grid>
                     </Grid>
 
