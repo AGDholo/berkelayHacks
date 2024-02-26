@@ -89,7 +89,7 @@ const Overview = () => {
                                     color: 'text.secondary',
                                     mt: 1
                                 }}>
-                        Use our program to enhance the hack club experience.
+                        Use Clear Sight to enhance the hack club experience.
                     </Typography>
                 </Grid>
             </Grid>
