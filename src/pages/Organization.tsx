@@ -285,6 +285,8 @@ const Organization = () => {
                                     }]}
                                     series={[
                                         {
+                                            area: true,
+                                            color: '#009688',
                                             data: totalSummary
                                         },
                                     ]}
@@ -372,7 +374,8 @@ const Organization = () => {
                                 padding: 2,
                                 boxShadow: 'none',
                                 border: '1px solid #e0e0e0',
-                                bgcolor: 'rgba(0,0,0,0.01)'
+                                bgcolor: 'rgba(0,0,0,0.01)',
+                                mt: 3
                             }}>
                                 <Typography variant={"h2"}>
                                     Donations
@@ -381,7 +384,7 @@ const Organization = () => {
                                     donationMonths && donationAmounts && donations && donations.length > 0 ? (
                                         <BarChart
                                             xAxis={[{scaleType: 'band', data: donationMonths}]}
-                                            series={[{data: donationAmounts}]}
+                                            series={[{data: donationAmounts, color: '#009688'}]}
                                             height={300}
                                         />
                                     ) : (
