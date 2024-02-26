@@ -418,42 +418,42 @@ export function getThemedComponents(theme: Theme) {
                     },
                 },
             },
-            MuiPaper: {
-                elevation: {
-                    boxShadow: '0 0 0 0 rgb(0 0 0 / 20%), 0 0 0 0 rgb(0 0 0 / 14%), 0 0 0 0 rgb(0 0 0 / 12%);'
-                },
-                styleOverrides: {
-                    root: {
-                        "&[href]": {
-                            textDecorationLine: "none",
-                        },
-                        a: {
-                            color:
-                                theme.palette.mode === "dark" ? theme.palette.grey[200] : "",
-                        },
-                        color: theme.palette.mode === "dark" ? theme.palette.grey[200] : "",
-                    },
-                    outlined: {
-                        display: "block",
-                        borderColor:
-                            theme.palette.mode === "dark"
-                                ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                  // @ts-ignore
-                                theme.palette.primaryDark[400]
-                                : theme.palette.grey[200],
-                        ...(theme.palette.mode === "dark" && {
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            backgroundColor: theme.palette.primaryDark[700],
-                        }),
-                        "a&, button&": {
-                            "&:hover": {
-                                boxShadow: "1px 1px 20px 0 rgb(90 105 120 / 20%)",
-                            },
-                        },
-                    },
-                },
-            },
+            // MuiPaper: {
+            //     elevation: {
+            //         boxShadow: '0 0 0 0 rgb(0 0 0 / 20%), 0 0 0 0 rgb(0 0 0 / 14%), 0 0 0 0 rgb(0 0 0 / 12%);'
+            //     },
+            //     styleOverrides: {
+            //         root: {
+            //             "&[href]": {
+            //                 textDecorationLine: "none",
+            //             },
+            //             a: {
+            //                 color:
+            //                     theme.palette.mode === "dark" ? theme.palette.grey[200] : "",
+            //             },
+            //             color: theme.palette.mode === "dark" ? theme.palette.grey[200] : "",
+            //         },
+            //         outlined: {
+            //             display: "block",
+            //             borderColor:
+            //                 theme.palette.mode === "dark"
+            //                     ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //                       // @ts-ignore
+            //                     theme.palette.primaryDark[400]
+            //                     : theme.palette.grey[200],
+            //             ...(theme.palette.mode === "dark" && {
+            //                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //                 // @ts-ignore
+            //                 backgroundColor: theme.palette.primaryDark[700],
+            //             }),
+            //             "a&, button&": {
+            //                 "&:hover": {
+            //                     boxShadow: "1px 1px 20px 0 rgb(90 105 120 / 20%)",
+            //                 },
+            //             },
+            //         },
+            //     },
+            // },
             MuiDialog: {
                 styleOverrides: {
                     root: {
