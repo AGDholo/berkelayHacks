@@ -168,7 +168,7 @@ const Organization = () => {
                                         whiteSpace: 'nowrap',     // 不换行，确保省略号能生效
                                         width: '100%'
                                     }}>
-                                    {formatter.format(data?.balances.balance_cents / 100 ?? 0)}
+                                    {formatter.format(data?.balances.balance_cents ?? 0 / 100 ?? 0)}
                                 </Typography>
                             </Card>
                         </Grid>
@@ -227,7 +227,7 @@ const Organization = () => {
                                                 whiteSpace: 'nowrap',     // 不换行，确保省略号能生效
                                                 width: '100%'
                                             }}>
-                                    {formatter.format(data?.balances.incoming_balance_cents / 100 ?? 0)}
+                                    {formatter.format(data?.balances.incoming_balance_cents ?? 0 / 100 ?? 0)}
                                 </Typography>
                             </Card>
                         </Grid>
@@ -308,7 +308,7 @@ const Organization = () => {
                         bgcolor: 'rgba(0,0,0,0.01)',
 
                     }}>
-                        {donations && donations.length > 0 && (
+                        {donations && donations.length > 0 ? (
                             <Box maxHeight={300}
                                  sx={{
                                      overflowY: 'auto'
@@ -360,7 +360,19 @@ const Organization = () => {
                                     </Card>
                                 ))}
                             </Box>
-                        )}
+                        ) : (
+                            <div>
+                                <Typography variant={"h2"}
+                                            sx={{
+                                                p: 2
+                                            }}
+                                >
+                                    No donation users
+                                </Typography>
+
+                            </div>
+                        )
+                        }
                     </Card>
                 </Grid>
 

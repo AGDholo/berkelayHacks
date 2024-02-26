@@ -2,7 +2,7 @@ import useSWR from "swr";
 import {fetcher, hcbApi} from "../config/api.ts";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {OrganizationType} from "../types/organizationType.ts";
-import {Checkbox} from "@mui/material";
+import {Box, Checkbox, Grid, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 
 
@@ -26,6 +26,15 @@ const columns: GridColDef[] = [
         )
     },
     {field: 'slug', headerName: 'Slug', width: 150},
+
+    {
+        field: 'transparent', headerName: 'Transparent', width: 120,
+        renderCell: (params) => (
+            <Checkbox checked={params.value}
+                      color={params.value ? 'success' : 'error'}
+            />
+        )
+    },
     {
         field: 'website', headerName: 'Website', width: 300,
         renderCell: (params) => (
@@ -36,23 +45,42 @@ const columns: GridColDef[] = [
             </a>
         )
     },
-    {
-        field: 'transparent', headerName: 'Transparent', width: 100,
-        renderCell: (params) => (
-            <Checkbox checked={params.value}
-                      color={params.value ? 'success' : 'error'}
-            />
-        )
-    },
 ];
 
 const Overview = () => {
     const {data} = useSWR<OrganizationType[]>(`${hcbApi}/api/v3/organizations?per_page=50`, fetcher)
     return (
-        <>
+        <Box sx={{}}>
+            <Grid container
+                  sx={{
+                      pt: 5,
+                      pb: 2,
+                  }}>
+                <Grid item>
+                    <Typography variant={'h1'}
+                                sx={{
+                                    fontSize: 50,
+                                }}>
+                        Hack Club Styled
+                    </Typography>
+
+                    <Typography variant={'subtitle1'}
+                                sx={{
+                                    color: 'text.secondary',
+                                    mt: 1
+                                }}>
+                        Use our program to enhance the hack club experience.
+                    </Typography>
+                </Grid>
+            </Grid>
+
             {data ? (
                 <div style={{height: 600, width: '100%'}}>
                     <DataGrid rows={data}
+                              initialState={{
+                                  pagination: {paginationModel: {pageSize: 25}},
+                              }}
+                              pageSizeOptions={[10, 25, 50]}
                               sx={{
                                   boxShadow: 2,
                                   border: 2,
@@ -67,7 +95,7 @@ const Overview = () => {
                               columns={columns}/>
                 </div>
             ) : (<div>Loading...</div>)}
-        </>
+        </Box>
     );
 }
 
