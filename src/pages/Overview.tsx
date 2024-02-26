@@ -2,7 +2,7 @@ import useSWR from "swr";
 import {fetcher, hcbApi} from "../config/api.ts";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {OrganizationType} from "../types/organizationType.ts";
-import {Box, Checkbox, Grid, Typography} from "@mui/material";
+import {Avatar, Box, Checkbox, Grid, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 
 
@@ -10,11 +10,22 @@ const columns: GridColDef[] = [
     {
         field: 'logo', headerName: 'Logo', width: 60,
         renderCell: (params) => (
-            <img src={params.value}
-                 alt={params.value}
-                 width={40}
-                 height={40}
-            />
+            <>
+                {params.value ? (
+                    <img src={params.value}
+                         alt={params.value}
+                         width={40}
+                         height={40}
+                    />
+                ) : (
+                    <Avatar sx={{
+                        bgcolor: ''
+                    }}>
+                        {params?.row?.name?.charAt(0)}
+                    </Avatar>
+                )}
+            </>
+
         )
     },
     {
