@@ -68,12 +68,21 @@ const Overview = () => {
                       pb: 2,
                   }}>
                 <Grid item>
-                    <Typography variant={'h1'}
-                                sx={{
-                                    fontSize: 50,
-                                }}>
-                        ClearSight
-                    </Typography>
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <img src={'/logo.png'}
+                             width={55}
+                             height={50}/>
+                        <Typography variant={'h1'}
+                                    sx={{
+                                        fontSize: 50,
+                                        ml: 1
+                                    }}>
+                            ClearSight
+                        </Typography>
+                    </Box>
 
                     <Typography variant={'subtitle1'}
                                 sx={{
